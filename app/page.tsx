@@ -1,4 +1,4 @@
-import {Categories, Container, SortPopup, Title} from "@/components/shared";
+import {Container, Title} from "@/components/shared";
 import {TopBar} from "@/components/shared/top-bar";
 
 export default function Home() {
