@@ -4,6 +4,7 @@ import {Input} from '@/components/ui/input';
 import {Title} from './title';
 import {FilterCheckbox} from "@/components/shared/filter-checkbox";
 import {RangeSlider} from "@/components/ui";
+import {CheckboxFiltersGroup} from "@/components/shared/checkbox-filters-group";
 
 
 interface Props {
@@ -30,87 +31,87 @@ export const Filters: React.FC<Props> = ({className}) => {
 
             </div>
 
-            {/*<CheckboxFiltersGroup*/}
-            {/*    className="mt-5"*/}
-            {/*    title="Формат"*/}
-            {/*    limit={6}*/}
-            {/*    defaultItems={[*/}
-            {/*        {*/}
-            {/*            text: 'Сырный соус',*/}
-            {/*            value: '1',*/}
-            {/*        },*/}
-            {/*        {*/}
-            {/*            text: 'Моццарелла',*/}
-            {/*            value: '2',*/}
-            {/*        },*/}
-            {/*        {*/}
-            {/*            text: 'Чеснок',*/}
-            {/*            value: '3',*/}
-            {/*        },*/}
-            {/*        {*/}
-            {/*            text: 'Солённые огурчики',*/}
-            {/*            value: '4',*/}
-            {/*        },*/}
-            {/*        {*/}
-            {/*            text: 'Красный лук',*/}
-            {/*            value: '5',*/}
-            {/*        },*/}
-            {/*        {*/}
-            {/*            text: 'Томаты',*/}
-            {/*            value: '6',*/}
-            {/*        },*/}
-            {/*    ]}*/}
-            {/*    items={[*/}
-            {/*        {*/}
-            {/*            text: 'Сырный соус',*/}
-            {/*            value: '1',*/}
-            {/*        },*/}
-            {/*        {*/}
-            {/*            text: 'Моццарелла',*/}
-            {/*            value: '2',*/}
-            {/*        },*/}
-            {/*        {*/}
-            {/*            text: 'Чеснок',*/}
-            {/*            value: '3',*/}
-            {/*        },*/}
-            {/*        {*/}
-            {/*            text: 'Солённые огурчики',*/}
-            {/*            value: '4',*/}
-            {/*        },*/}
-            {/*        {*/}
-            {/*            text: 'Красный лук',*/}
-            {/*            value: '5',*/}
-            {/*        },*/}
-            {/*        {*/}
-            {/*            text: 'Томаты',*/}
-            {/*            value: '6',*/}
-            {/*        },*/}
-            {/*        {*/}
-            {/*            text: 'Сырный соус',*/}
-            {/*            value: '1',*/}
-            {/*        },*/}
-            {/*        {*/}
-            {/*            text: 'Моццарелла',*/}
-            {/*            value: '2',*/}
-            {/*        },*/}
-            {/*        {*/}
-            {/*            text: 'Чеснок',*/}
-            {/*            value: '3',*/}
-            {/*        },*/}
-            {/*        {*/}
-            {/*            text: 'Солённые огурчики',*/}
-            {/*            value: '4',*/}
-            {/*        },*/}
-            {/*        {*/}
-            {/*            text: 'Красный лук',*/}
-            {/*            value: '5',*/}
-            {/*        },*/}
-            {/*        {*/}
-            {/*            text: 'Томаты',*/}
-            {/*            value: '6',*/}
-            {/*        },*/}
-            {/*    ]}*/}
-            {/*/>*/}
+            <CheckboxFiltersGroup
+                className="mt-5"
+                title="Формат"
+                limit={6}
+                defaultItems={[
+                    {
+                        text: 'Сырный соус',
+                        value: '1',
+                    },
+                    {
+                        text: 'Моццарелла',
+                        value: '2',
+                    },
+                    {
+                        text: 'Чеснок',
+                        value: '3',
+                    },
+                    {
+                        text: 'Солённые огурчики',
+                        value: '4',
+                    },
+                    {
+                        text: 'Красный лук',
+                        value: '5',
+                    },
+                    {
+                        text: 'Томаты',
+                        value: '6',
+                    },
+                ]}
+                items={[
+                    {
+                        text: 'Сырный соус',
+                        value: '1',
+                    },
+                    {
+                        text: 'Моццарелла',
+                        value: '2',
+                    },
+                    {
+                        text: 'Чеснок',
+                        value: '3',
+                    },
+                    {
+                        text: 'Солённые огурчики',
+                        value: '4',
+                    },
+                    {
+                        text: 'Красный лук',
+                        value: '5',
+                    },
+                    {
+                        text: 'Томаты',
+                        value: '6',
+                    },
+                    {
+                        text: 'Сырный соус',
+                        value: '1',
+                    },
+                    {
+                        text: 'Моццарелла',
+                        value: '2',
+                    },
+                    {
+                        text: 'Чеснок',
+                        value: '3',
+                    },
+                    {
+                        text: 'Солённые огурчики',
+                        value: '4',
+                    },
+                    {
+                        text: 'Красный лук',
+                        value: '5',
+                    },
+                    {
+                        text: 'Томаты',
+                        value: '6',
+                    },
+                ]}
+            />
         </div>
     );
 };
