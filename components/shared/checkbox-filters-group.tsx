@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
-
-import { FilterCheckbox, FilterChecboxProps } from './filter-checkbox';
-import { Input } from '../ui/input';
+import {FilterChecboxProps, FilterCheckbox} from "@/components/shared/filter-checkbox";
+import {useState} from "react";
+import {Input, Skeleton} from "@/components/ui";
+import {cn} from "@/lib/utils";
 
 type Item = FilterChecboxProps;
 
@@ -13,9 +13,12 @@ interface Props {
     defaultItems?: Item[];
     limit?: number;
     searchInputPlaceholder?: string;
-    className?: string;
-    onChange?: (values: string[]) => void;
+    onClickCheckbox?: (id: string) => void;
     defaultValue?: string[];
+    selectedValues?: Set<string>;
+    isLoading?: boolean;
+    className?: string;
+    name?: string;
 }
 
 export const CheckboxFiltersGroup: React.FC<Props> = ({
@@ -24,79 +27,80 @@ export const CheckboxFiltersGroup: React.FC<Props> = ({
                                                           defaultItems,
                                                           limit = 5,
                                                           searchInputPlaceholder = 'Поиск...',
-                                                          className,
-                                                          onChange,
+                                                          onClickCheckbox,
                                                           defaultValue,
+                                                          selectedValues,
+                                                          isLoading,
+                                                          className,
+                                                          name
                                                       }) => {
-    const [showAll, setShowAll] = React.useState(false);
-    const [selected, setSelected] = React.useState<Set<string>>(new Set([]));
+    const [showAll, setShowAll] = useState(false);
+    const [seachValue, setSearchValue] = useState('');
 
-    // Заменяем функции useSet
-    const add = (value: string) => {
-        setSelected(prev => new Set([...prev, value]));
+    const onChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchValue(e.target.value);
     };
 
-    const remove = (value: string) => {
-        setSelected(prev => {
-            const newSet = new Set(prev);
-            newSet.delete(value);
-            return newSet;
-        });
-    };
+    if (isLoading) {
+        return (
+            <div className={className}>
+                <p className='mb-3 font-bold'>{title}</p>
 
-    const toggle = (value: string) => {
-        setSelected(prev => {
-            const newSet = new Set(prev);
-            if (newSet.has(value)) {
-                newSet.delete(value);
-            } else {
-                newSet.add(value);
-            }
-            return newSet;
-        });
-    };
+                {...Array(limit)
+                    .fill(0)
+                    .map((_, index) => (
+                        <Skeleton
+                            key={index}
+                            className='mb-4 h-6 rounded-[8px]'
+                        />
+                    ))}
 
-    const onCheckedChange = (value: string) => {
-        toggle(value);
-    };
-
-    React.useEffect(() => {
-        if (defaultValue) {
-            const initialSet = new Set(defaultValue);
-            setSelected(initialSet);
-        }
-    }, [defaultValue]);
-
-    React.useEffect(() => {
-        onChange?.(Array.from(selected));
-    }, [selected]);
+                <Skeleton className='mb-4 h-6 w-28 rounded-[8px]' />
+            </div>
+        );
+    }
+// фильтр-поиск
+    const list = showAll
+        ? items.filter(item =>
+            item.text.toLowerCase().includes(seachValue.toLowerCase())
+        )
+        : (defaultItems || items).slice(0, limit);
 
     return (
         <div className={className}>
-            <p className="font-bold mb-3">{title}</p>
+            <p className='mb-3 font-bold'>{title}</p>
+            <div className='mb-5'>
+                {showAll && (
+                    <Input
+                        onChange={onChangeSearchInput}
+                        placeholder={searchInputPlaceholder}
+                        className='border-none bg-gray-50'
+                    />
+                )}
+            </div>
 
-            {showAll && (
-                <div className="mb-5">
-                    <Input placeholder={searchInputPlaceholder} className="bg-gray-50 border-none" />
-                </div>
-            )}
-
-            <div className="flex flex-col gap-4 max-h-96 pr-2 overflow-auto scrollbar">
-                {(showAll ? items : defaultItems || items).map((item) => (
+            <div className='scrollbar flex max-h-96 flex-col gap-4 overflow-auto pr-2'>
+                {list.map((item, index) => (
                     <FilterCheckbox
-                        onCheckedChange={() => onCheckedChange(item.value)}
-                        checked={selected.has(item.value)}
-                        key={String(item.value)}
+                        key={index}
                         value={item.value}
                         text={item.text}
                         endAdornment={item.endAdornment}
+                        checked={selectedValues?.has(item.value)}
+                        onCheckedChange={() => onClickCheckbox?.(item.value)}
+
                     />
                 ))}
             </div>
 
             {items.length > limit && (
-                <div className={showAll ? 'border-t border-t-neutral-100 mt-4' : ''}>
-                    <button onClick={() => setShowAll(!showAll)} className="text-primary mt-3">
+                <div
+                    className={cn(showAll ? 'mt-4 border-t border-t-neutral-100' : '')}
+                >
+                    <button
+                        onClick={() => setShowAll(!showAll)}
+                        className='mt-3 text-primary'
+                    >
                         {showAll ? 'Скрыть' : '+ Показать все'}
                     </button>
                 </div>
