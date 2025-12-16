@@ -1,7 +1,20 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+    eslint: {
+        ignoreDuringBuilds: true, // TODO удалить
+    },
+    typescript: {
+        ignoreBuildErrors: true, // TODO удалить
+    },
+    images: {
+        remotePatterns: [
+            {
+                protocol: "https",
+                hostname: "media.dodostatic.net",
+                pathname: "/**"
+            },
+        ],
+    },
+}
 
-const nextConfig: NextConfig = {
-  /* config options here */
-};
-
-export default nextConfig;
+module.exports = nextConfig

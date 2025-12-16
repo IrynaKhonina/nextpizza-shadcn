@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { Title } from './title';
 import { CountButton } from './count-button';
 import Link from "next/link";
+import Image from 'next/image';
 
 interface Props {
     id: number;
@@ -19,9 +20,15 @@ export const ProductCard: React.FC<Props> = ({ name, price, count, imageUrl, cla
     return (
         <div className={cn(className)}>
             <Link href={`/product/${id}`}>
-            <div className="flex justify-center p-6 bg-secondary rounded-lg h-[260px]">
-                <img className="w-[215px] h-[215px]" src={imageUrl} alt={name} />
-            </div>
+                <div className={cn('relative h-60 w-60')}>
+                    <Image
+                        fill
+                        sizes='100%'
+                        src={imageUrl}
+                        alt={name}
+                        priority
+                    />
+                </div>
             </Link>
 
 

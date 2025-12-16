@@ -7,7 +7,7 @@ import {cn} from "@/lib/utils";
 
 interface Props {
     title: string;
-    items: any[];
+    items: [];
     categoryId?: number;
     className?: string;
     listClassName?: string;
