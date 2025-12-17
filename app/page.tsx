@@ -33,6 +33,7 @@
                                     imageUrl:"https://media.dodostatic.net/image/r:584x584/0198bf439a007604880d0231be87cd3e.avif",
                                     price:550,
                                     items: [{price:550}]
+
                                 }]}
                                 />
                                 <ProductsGroupList
