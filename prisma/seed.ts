@@ -2,6 +2,9 @@
 import 'dotenv/config'
 import { prisma } from '@/lib/prisma'
 import { hashSync } from 'bcrypt'
+import {categories, ingredients, products} from "@/prisma/constants";
+
+
 
 async function main() {
     console.log('🚀 Запуск seed...')
@@ -36,6 +39,19 @@ async function main() {
         console.log('Созданы пользователи:')
         console.log(`1. ${user1.fullname} - ${user1.email} (ID: ${user1.id})`)
         console.log(`2. ${user2.fullname} - ${user2.email} (ID: ${user2.id})`)
+
+
+        await prisma.category.createMany({
+            data: categories
+        });
+
+        await prisma.ingredient.createMany({
+            data: ingredients
+        });
+
+        await prisma.product.createMany({
+            data: products
+        });
 
     } catch (error) {
         console.error('❌ Ошибка seed:', error)
