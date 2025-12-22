@@ -1,16 +1,13 @@
-// lib/prisma.ts
+// lib/prisma.ts - ИСПРАВЛЕННЫЙ ВАРИАНТ (для Accelerate)
 import { PrismaClient } from '@prisma/client'
-import { PrismaPg } from '@prisma/adapter-pg'
-import { Pool } from 'pg'
 
-// 1. Создайте пул соединений для PostgreSQL
-const connectionString = process.env.DATABASE_URL!
-const pool = new Pool({ connectionString })
-const adapter = new PrismaPg(pool)
-
-// 2. Паттерн синглтона для предотвращения множественных соединений в dev-режиме
+// 1. Паттерн синглтона для предотвращения множественных соединений в dev-режиме
 const prismaClientSingleton = () => {
-    return new PrismaClient({ adapter })
+    return new PrismaClient({
+        // ТОЛЬКО accelerateUrl для Prisma Data Platform
+        accelerateUrl: process.env.PRISMA_DATABASE_URL
+        // НЕТ adapter здесь!
+    })
 }
 
 declare const globalThis: {

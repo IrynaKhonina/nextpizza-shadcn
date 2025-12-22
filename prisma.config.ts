@@ -1,13 +1,18 @@
 // prisma.config.ts
 import 'dotenv/config'
-import { defineConfig, env } from 'prisma/config'
+import { defineConfig, env } from "prisma/config";
+
+
 
 export default defineConfig({
-    schema: 'prisma/schema.prisma',      // Путь к схеме
+    schema: "prisma/schema.prisma",
     migrations: {
-        path: 'prisma/migrations',         // Папка для миграций
+        path: "prisma/migrations",
+        seed: 'tsx prisma/seed.ts',
     },
     datasource: {
-        url: env('DATABASE_URL'),           // URL берется из переменной окружения
-    },
-})
+        // Используйте переменную окружения с вашим специальным URL
+
+        url: env("DATABASE_URL") // Он начинается с prisma+postgres://[citation:3]
+    }
+});
