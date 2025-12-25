@@ -1,9 +1,8 @@
-// prisma/seed.ts - ИСПРАВЛЕННЫЙ ВАРИАНТ
+
 import 'dotenv/config'
 import { prisma } from '@/lib/prisma'
 import { hashSync } from 'bcrypt'
 import { categories, ingredients, products } from "@/prisma/constants"
-import { Prisma } from "@prisma/client"
 
 const randomDecimalNumber = (min: number, max: number) => {
     return Math.floor(Math.random() * (max - min) * 10 + min * 10) / 10
@@ -23,7 +22,7 @@ const generateProductItem = ({
         price: randomDecimalNumber(190, 600),
         pizzaType,
         size
-    } as Prisma.ProductItemUncheckedCreateInput
+    }
 }
 
 async function main() {
@@ -32,6 +31,8 @@ async function main() {
     try {
         // ОЧИСТКА В ПРАВИЛЬНОМ ПОРЯДКЕ
         console.log('🧹 Очистка таблиц...')
+        await prisma.storyItem.deleteMany({})
+        await prisma.story.deleteMany({})
         await prisma.cartItem.deleteMany({})
         await prisma.cart.deleteMany({})
         await prisma.productItem.deleteMany({})
@@ -174,6 +175,114 @@ async function main() {
         })
         console.log('✅ Варианты для пицц созданы')
 
+        // ВАШ КОД - АДАПТИРОВАННЫЙ (без ошибок)
+        console.log('🛒 Создание корзин...')
+        await prisma.cart.createMany({
+            data: [
+                {
+                    userId: user1.id,  // ← РЕАЛЬНЫЙ ID пользователя
+                    totalAmount: 0,
+                    token: 'cart-token-1'
+                },
+                {
+                    userId: user2.id,  // ← РЕАЛЬНЫЙ ID пользователя
+                    totalAmount: 0,
+                    token: 'cart-token-2'
+                }
+            ]
+        })
+        console.log('✅ Корзины созданы')
+
+        // ВАШ КОД - АДАПТИРОВАННЫЙ (без ошибок)
+        console.log('🛍️ Создание элементов корзины...')
+
+        // 1. Находим реальные данные
+        const userCart = await prisma.cart.findFirst({
+            where: { userId: user1.id }
+        })
+
+        // 2. Находим существующий ProductItem
+        const existingProductItem = await prisma.productItem.findFirst({
+            orderBy: { id: 'asc' }
+        })
+
+        // 3. Находим реальные ингредиенты
+        const someIngredients = await prisma.ingredient.findMany({
+            take: 5,
+            orderBy: { id: 'asc' },
+            select: { id: true }
+        })
+
+        if (userCart && existingProductItem && someIngredients.length > 0) {
+            await prisma.cartItem.create({
+                data: {
+                    productItemId: existingProductItem.id, // ← РЕАЛЬНЫЙ ID
+                    cartId: userCart.id, // ← РЕАЛЬНЫЙ ID
+                    quantity: 2,
+                    ingredients: {
+                        connect: someIngredients.map(ing => ({ id: ing.id })) // ← РЕАЛЬНЫЕ ID
+                    }
+                }
+            })
+            console.log(`✅ CartItem создан с ${someIngredients.length} ингредиентами`)
+        } else {
+            console.log('⚠️ Не удалось создать CartItem')
+        }
+
+
+        console.log('📱 Создание сторис...')
+        await prisma.story.createMany({
+            data: [
+                {
+                    previewImageUrl: 'https://cdn.inappstory.ru/story/xep/xzh/zmc/cr4gcw0aselwvf628pbmj3j/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAE&v=3101815496'
+                },
+                {
+                    previewImageUrl: 'https://cdn.inappstory.ru/story/km2/9gf/jrn/sb7ls1yj9fe5bwvuwgym73e/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAE&v=3074015640'
+                },
+                {
+                    previewImageUrl: 'https://cdn.inappstory.ru/story/quw/acz/zf5/zu37vankpngyccqvgzbohj1/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAE&v=1336215020'
+                },
+                {
+                    previewImageUrl: 'https://cdn.inappstory.ru/story/7oc/5nf/ipn/oznceu2ywv82tdlnpwriyrq/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAE&v=38903958'
+                },
+                {
+                    previewImageUrl: 'https://cdn.inappstory.ru/story/q0t/flg/0ph/xt67uw7kgqe9bag7spwkkyw/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAE&v=2941222737'
+                },
+                {
+                    previewImageUrl: 'https://cdn.inappstory.ru/story/lza/rsp/2gc/xrar8zdspl4saq4uajmso38/custom_cover/logo-350x440.webp?k=IgAAAAAAAAAE&v=4207486284'
+                }
+            ]
+        })
+        console.log('✅ Сторисы созданы')
+
+        // ВАШ КОД - АДАПТИРОВАННЫЙ (работает без изменений)
+        console.log('📹 Создание элементов сторис...')
+        await prisma.storyItem.createMany({
+            data: [
+                {
+                    storyId: 1,
+                    sourceUrl: 'https://cdn.inappstory.ru/file/dd/yj/sx/oqx9feuljibke3mknab7ilb35t.webp?k=IgAAAAAAAAAE'
+                },
+                {
+                    storyId: 1,
+                    sourceUrl: 'https://cdn.inappstory.ru/file/jv/sb/fh/io7c5zarojdm7eus0trn7czdet.webp?k=IgAAAAAAAAAE'
+                },
+                {
+                    storyId: 1,
+                    sourceUrl: 'https://cdn.inappstory.ru/file/ts/p9/vq/zktyxdxnjqbzufonxd8ffk44cb.webp?k=IgAAAAAAAAAE'
+                },
+                {
+                    storyId: 1,
+                    sourceUrl: 'https://cdn.inappstory.ru/file/ur/uq/le/9ufzwtpdjeekidqq04alfnxvu2.webp?k=IgAAAAAAAAAE'
+                },
+                {
+                    storyId: 1,
+                    sourceUrl: 'https://cdn.inappstory.ru/file/sy/vl/c7/uyqzmdojadcbw7o0a35ojxlcul.webp?k=IgAAAAAAAAAE'
+                }
+            ]
+        })
+        console.log('✅ Элементы сторис созданы')
+
         console.log('\n🎉 Seed полностью выполнен успешно!')
         console.log('━'.repeat(50))
         console.log('📊 Итого создано:')
@@ -181,6 +290,11 @@ async function main() {
         console.log(`   🏷️  Категорий: ${createdCategories.length}`)
         console.log(`   🧀 Ингредиентов: ${ingredients.length}`)
         console.log(`   🍕 Продуктов: ${products.length + 3} (из constants + 3 пиццы)`)
+        console.log(`   📦 Вариантов продуктов: 12`)
+        console.log(`   🛒 Корзин: 2`)
+        console.log(`   🛍️ Элементов корзины: 1`)
+        console.log(`   📱 Сторисов: 6`)
+        console.log(`   📹 Элементов сторис: 5`)
         console.log('━'.repeat(50))
 
     } catch (error) {
