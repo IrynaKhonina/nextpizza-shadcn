@@ -1,62 +1,49 @@
 'use client';
 
-import React, {useEffect, useRef, useState} from 'react';
-import {Title} from './title';
-import {ProductCard} from './product-card';
-import {cn} from "@/lib/utils";
+import React, { useEffect, useRef } from 'react';
+import { useIntersection } from 'react-use';
+
+import { ProductCard } from './product-card';
+import { Title } from './title';
+
+import { ProductWithRelations } from '@/@types/prisma';
+
 import {useCategoryStore} from "@/store/category";
+import {cn} from "@/lib/utils";
 
 interface Props {
     title: string;
-    items: any[];
-    categoryId?: number;
-    className?: string;
+    items: ProductWithRelations[];
     listClassName?: string;
+    categoryId: number;
+    className?: string;
 }
 
 export const ProductsGroupList: React.FC<Props> = ({
                                                        title,
                                                        items,
-                                                       className,
+                                                       listClassName,
                                                        categoryId,
-                                                       listClassName
+                                                       className
                                                    }) => {
-
     const setActiveCategoryId = useCategoryStore(state => state.setActiveId);
-    const intersectionRef = useRef<HTMLDivElement>(null);
-    const [isIntersecting, setIsIntersecting] = useState(false);
+    const intersectionRef = useRef<HTMLDivElement | null>(null);
+
+    const intersection = useIntersection(
+        intersectionRef as React.RefObject<HTMLElement>,
+        { threshold: 0.4 }
+    );
 
     useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                setIsIntersecting(entry.isIntersecting);
-            },
-            {threshold: 0.4}
-        );
-
-        const currentRef = intersectionRef.current;
-
-        if (currentRef) {
-            observer.observe(currentRef);
-        }
-
-        return () => {
-            if (currentRef) {
-                observer.unobserve(currentRef);
-            }
-        };
-    }, []);
-
-    useEffect(() => {
-        if (isIntersecting && categoryId) {
+        if (intersection?.isIntersecting) {
             setActiveCategoryId(categoryId);
         }
-    }, [isIntersecting, categoryId, setActiveCategoryId, title]);
+    }, [categoryId, intersection?.isIntersecting, title]);
 
     return (
         <div
-            className={className}
-            id={title}
+            className={cn(className)}
+            id={`category-${categoryId}`}
             ref={intersectionRef}
         >
             <Title
@@ -77,8 +64,8 @@ export const ProductsGroupList: React.FC<Props> = ({
                         id={product.id}
                         name={product.name}
                         imageUrl={product.imageUrl}
-                        price={product.items[0].price}
-                        ingredients={product.ingredients || []}
+                        price={product.variants[0].price}
+                        ingredients={product.ingredients}
                     />
                 ))}
             </div>
