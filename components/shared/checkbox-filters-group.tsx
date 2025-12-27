@@ -1,11 +1,15 @@
 'use client';
 
-import {FilterChecboxProps, FilterCheckbox} from "@/components/shared/filter-checkbox";
-import {useState} from "react";
-import {Input, Skeleton} from "@/components/ui";
+import React, { useState } from 'react';
+
+import { FilterCheckbox } from '.';
+import { Input, Skeleton } from '../ui';
+import { FilterCheckboxProps } from './filter-checkbox';
 import {cn} from "@/lib/utils";
 
-type Item = FilterChecboxProps;
+
+
+type Item = FilterCheckboxProps;
 
 interface Props {
     title: string;
@@ -59,7 +63,7 @@ export const CheckboxFiltersGroup: React.FC<Props> = ({
             </div>
         );
     }
-// фильтр-поиск
+
     const list = showAll
         ? items.filter(item =>
             item.text.toLowerCase().includes(seachValue.toLowerCase())
@@ -88,7 +92,7 @@ export const CheckboxFiltersGroup: React.FC<Props> = ({
                         endAdornment={item.endAdornment}
                         checked={selectedValues?.has(item.value)}
                         onCheckedChange={() => onClickCheckbox?.(item.value)}
-
+                        name={name}
                     />
                 ))}
             </div>

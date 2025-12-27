@@ -2,22 +2,23 @@
 
 import React from 'react';
 
-import { Title } from '.';
+
 import {Input, RangeSlider} from '../ui';
 
 
 
+import {Title} from "@/components/shared/title";
+import {CheckboxFiltersGroup} from "@/components/shared/checkbox-filters-group";
 import {useIngredients} from "@/hooks/use-ingredients";
 import {useFilters} from "@/hooks/use-filters";
 import {useQueryFilters} from "@/hooks/use-query-filters";
-import {CheckboxFiltersGroup} from "@/components/shared/checkbox-filters-group";
 
 interface Props {
     className?: string;
 }
 
 export const Filters: React.FC<Props> = ({ className }) => {
-    const { ingredients} = useIngredients();
+    const { ingredients, isloading } = useIngredients();
     const filters = useFilters();
 
     useQueryFilters(filters);
@@ -109,6 +110,7 @@ export const Filters: React.FC<Props> = ({ className }) => {
                 limit={6}
                 defaultItems={items.slice(0, 6)}
                 items={items}
+                isLoading={isloading}
                 onClickCheckbox={filters.setSelectedIngredients}
                 selectedValues={filters.selectedIngredients}
             />
