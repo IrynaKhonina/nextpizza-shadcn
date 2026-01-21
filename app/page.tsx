@@ -27,7 +27,7 @@ export default async function Home({
                 categories={categories.filter(category => category.products.length > 0)}
             />
 
-            {/*<Stories />*////}
+            {/*<Stories />*/}
 
             <Container className='mt-10 pb-14'>
                 <div className='flex gap-[60px]'>
